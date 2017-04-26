@@ -75,10 +75,11 @@ influx_connection <-  function(host = NULL,
   influxdb_srv <- list(host = host, port = port, user = user, pass = pass)
 
   # submit test ping
-  response <- httr::GET(url = "", scheme = "http",
+  response <- httr::GET(url = "", scheme = "https",
                         hostname = influxdb_srv$host,
                         port = influxdb_srv$port,
-                        path = "ping", httr::timeout(5))
+                        path = "ping", httr::timeout(5),
+                        config = httr::config(ssl_verifypeer = 0)) # dangerous!
 
   # print url
   if (verbose) print(response$url)
@@ -109,10 +110,11 @@ influx_ping <- function(con) {
 
   # submit ping
   response <- httr::GET(url = "",
-                        scheme = "http",
+                        scheme = "https",
                         hostname = con$host,
                         port = con$port,
-                        path = "ping")
+                        path = "ping",
+                        config = httr::config(ssl_verifypeer = 0)) # dangerous!
 
 
   return(response$all_headers)
@@ -167,11 +169,12 @@ influx_query <- function(con,
 
   # submit query
   response <- httr::GET(url = "",
-                        scheme = "http",
+                        scheme = "https",
                         hostname = con$host,
                         port = con$port,
                         path = "query",
-                        query = q)
+                        query = q,
+                        config = httr::config(ssl_verifypeer = 0)) # dangerous!
 
   if (performance) print(paste(Sys.time(), "after query"))
 
@@ -465,12 +468,13 @@ influx_write <- function(con,
 
     # submit post
     response <- httr::POST(url = "", httr::timeout(60),
-                           scheme = "http",
+                           scheme = "https",
                            hostname = con$host,
                            port = con$port,
                            path = "write",
                            query = q,
-                           body = influxdb_line_protocol)
+                           body = influxdb_line_protocol,
+                           config = httr::config(ssl_verifypeer = 0)) # dangerous!
 
 
     # Check for communication errors

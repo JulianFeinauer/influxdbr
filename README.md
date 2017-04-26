@@ -9,7 +9,7 @@ Install using devtools:
 ```
 if (!require(devtools))
   install.packages('devtools')
-devtools::install_github("dleutnant/influxdbr")
+devtools::install_github("JulianFeinauer/influxdbr")
 ```
 
 Example use:
